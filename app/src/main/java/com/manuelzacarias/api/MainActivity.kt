@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.manuelzacarias.api.core.navigation.NavGraph
 import com.manuelzacarias.api.core.ui.theme.ApiTheme
-import com.manuelzacarias.api.features.translation.presentation.screens.TranslationScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,9 +20,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ApiTheme {
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TranslationScreen(
-                        modifier = Modifier.padding(innerPadding)
+                    NavGraph(
+                        navController = navController
                     )
                 }
             }

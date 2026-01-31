@@ -3,11 +3,9 @@ package com.manuelzacarias.api.features.translation.data.datasources.remote.mode
 import com.google.gson.annotations.SerializedName
 
 data class TranslationResponse(
-    @SerializedName("responseData")
-    val responseData: ResponseData
+    @SerializedName("responseData") val responseData: ResponseData
 )
 
 data class ResponseData(
-    @SerializedName("translatedText")
-    val translatedText: String
+    @SerializedName("translatedText") val translatedText: String
 )

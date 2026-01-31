@@ -7,7 +7,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.manuelzacarias.api.features.translation.presentation.viewmodels.TranslationUiState
 import com.manuelzacarias.api.features.translation.presentation.viewmodels.TranslationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,36 +67,37 @@ fun TranslationScreen(
         Button(
             onClick = { viewModel.translate(textToTranslate, sourceLanguage, targetLanguage) },
             modifier = Modifier.fillMaxWidth(),
-            enabled = textToTranslate.isNotBlank() && uiState !is TranslationUiState.Loading
+            enabled = textToTranslate.isNotBlank() && !uiState.isLoading
         ) {
-            Text("Translate")
+            Text(if (uiState.isTranslating) "Translating..." else "Translate")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        when (val state = uiState) {
-            is TranslationUiState.Loading -> CircularProgressIndicator()
-            is TranslationUiState.Success -> {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                ) {
-                    Text(
-                        text = state.result,
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
-            is TranslationUiState.Error -> {
+        if (uiState.isLoading) {
+            CircularProgressIndicator()
+        }
+
+        uiState.translatedText?.let { result ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+            ) {
                 Text(
-                    text = "Error: ${state.message}",
-                    color = MaterialTheme.colorScheme.error
+                    text = result,
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
-            else -> {}
+        }
+
+        uiState.error?.let { error ->
+            Text(
+                text = "Error: $error",
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }
